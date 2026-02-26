@@ -1,44 +1,15 @@
-// Rupay Select Voucher Tracker
-// Main page with editable tables for tracking card benefits
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/data-table"
 import { columns } from "@/components/columns"
+import { getVouchers } from "./actions"
+import type { Voucher } from "@/lib/schema"
+import { Suspense } from "react"
 
-// Sample data - will be replaced with actual Rupay Select benefits after research
-const sampleData = [
-  {
-    id: "1",
-    cardName: "Bank of Baroda (Sourabh)",
-    cardType: "Quarterly",
-    voucherName: "Cult.Fit Membership",
-    q1: false,
-    q2: false,
-    q3: false,
-    q4: false,
-    halfYear1: false,
-    halfYear2: false,
-    yearly: false,
-    lastRedeemed: "-",
-    notes: "3 months membership"
-  },
-  {
-    id: "2",
-    cardName: "Canara Bank",
-    cardType: "Yearly",
-    voucherName: "Amazon Prime",
-    q1: false,
-    q2: false,
-    q3: false,
-    q4: false,
-    halfYear1: false,
-    halfYear2: false,
-    yearly: false,
-    lastRedeemed: "-",
-    notes: "1 year subscription"
-  }
-]
+async function VoucherTable() {
+  const data = await getVouchers()
+  return <DataTable columns={columns} data={data} />
+}
 
 export default function Home() {
   return (
@@ -46,11 +17,9 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-8 text-center">💳 Rupay Select Voucher Tracker</h1>
       
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="all">All Cards</TabsTrigger>
           <TabsTrigger value="quarterly">Quarterly</TabsTrigger>
-          <TabsTrigger value="halfyear">Half-Year</TabsTrigger>
-          <TabsTrigger value="yearly">Yearly</TabsTrigger>
         </TabsList>
         
         <TabsContent value="all">
@@ -58,8 +27,10 @@ export default function Home() {
             <CardHeader>
               <CardTitle>All Vouchers</CardTitle>
             </CardHeader>
-            <CardContent>
-              <DataTable columns={columns} data={sampleData} />
+            <CardContent className="pt-0">
+              <Suspense fallback={<div>Loading...</div>}>
+                <VoucherTable />
+              </Suspense>
             </CardContent>
           </Card>
         </TabsContent>
@@ -70,29 +41,7 @@ export default function Home() {
               <CardTitle>Quarterly Benefits</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataTable columns={columns} data={sampleData.filter(item => item.cardType === "Quarterly")} />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="halfyear">
-          <Card>
-            <CardHeader>
-              <CardTitle>Half-Year Benefits</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DataTable columns={columns} data={sampleData.filter(item => item.cardType === "Half-Year")} />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="yearly">
-          <Card>
-            <CardHeader>
-              <CardTitle>Yearly Benefits</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DataTable columns={columns} data={sampleData.filter(item => item.cardType === "Yearly")} />
+              <p>Quarterly vouchers filtered here (TBD)</p>
             </CardContent>
           </Card>
         </TabsContent>

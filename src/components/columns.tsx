@@ -1,25 +1,9 @@
 // Data table columns configuration
 import { ColumnDef } from "@tanstack/react-table"
+import type { Voucher } from "@/lib/schema"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Pencil, Trash2 } from "lucide-react"
-
-// Define the type for our data
-interface Voucher {
-  id: string
-  cardName: string
-  cardType: string
-  voucherName: string
-  q1: boolean
-  q2: boolean
-  q3: boolean
-  q4: boolean
-  halfYear1: boolean
-  halfYear2: boolean
-  yearly: boolean
-  lastRedeemed: string
-  notes: string
-}
 
 export const columns: ColumnDef<Voucher>[] = [
   {
@@ -75,7 +59,8 @@ export const columns: ColumnDef<Voucher>[] = [
           <Checkbox
             checked={row.original.q1}
             onCheckedChange={(value) => {
-              // TODO: Implement redemption marking
+              console.log('Toggle Q1', row.original.id, value)
+              // TODO: Call toggleQuarter(row.original.id, 'q1', !!value)
             }}
           />
         ),
@@ -87,7 +72,8 @@ export const columns: ColumnDef<Voucher>[] = [
           <Checkbox
             checked={row.original.q2}
             onCheckedChange={(value) => {
-              // TODO: Implement redemption marking
+              console.log('Toggle Q2', row.original.id, value)
+              // TODO: Call toggleQuarter(row.original.id, 'q2', !!value)
             }}
           />
         ),
@@ -99,7 +85,8 @@ export const columns: ColumnDef<Voucher>[] = [
           <Checkbox
             checked={row.original.q3}
             onCheckedChange={(value) => {
-              // TODO: Implement redemption marking
+              console.log('Toggle Q3', row.original.id, value)
+              // TODO: Call toggleQuarter(row.original.id, 'q3', !!value)
             }}
           />
         ),
@@ -111,7 +98,8 @@ export const columns: ColumnDef<Voucher>[] = [
           <Checkbox
             checked={row.original.q4}
             onCheckedChange={(value) => {
-              // TODO: Implement redemption marking
+              console.log('Toggle Q4', row.original.id, value)
+              // TODO: Call toggleQuarter(row.original.id, 'q4', !!value)
             }}
           />
         ),
