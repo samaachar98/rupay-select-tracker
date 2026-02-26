@@ -29,7 +29,7 @@ async function VoucherTable() {
               <tr key={voucher.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{voucher.cardName || 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{voucher.voucherName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{voucher.cycle_type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{voucher.cardType ?? 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input type="checkbox" checked={voucher.q1} readOnly className="h-4 w-4" />
                 </td>

@@ -1,8 +1,8 @@
 // Data table columns configuration
 import { ColumnDef } from "@tanstack/react-table"
-import type { Voucher } from "@/lib/schema"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
+import type { Voucher } from "../../lib/schema"
+import { Checkbox } from "./ui/checkbox"
+import { Button } from "./ui/button"
 import { Pencil, Trash2 } from "lucide-react"
 
 export const columns: ColumnDef<Voucher>[] = [
