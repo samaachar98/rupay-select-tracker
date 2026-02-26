@@ -1,22 +1,47 @@
-import { getVouchers } from "./actions"
-import type { Voucher } from "../lib/schema"
-import { Suspense } from "react"
+'use client'
 
-async function VoucherTable() {
-  const data = await getVouchers()
-  // For now, show a simple table - can enhance with DataTable later
+import { useEffect, useState } from 'react'
+import { createClient } from '../lib/supabase'
+
+type Voucher = {
+  id: string
+  cardName: string
+  voucherName: string
+  cycle_type: string
+  q1: boolean
+  q2: boolean
+  q3: boolean
+  q4: boolean
+}
+
+function VoucherTable() {
+  const [data, setData] = useState<Voucher[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchVouchers() {
+      const supabase = createClient()
+      const { data: vouchers } = await supabase.from('vouchers').select('*')
+      setData(vouchers || [])
+      setLoading(false)
+    }
+    fetchVouchers()
+  }, [])
+
+  if (loading) return <div className="text-center py-8">Loading...</div>
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Card</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voucher</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cycle</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q1</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q2</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q3</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q4</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Card</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Voucher</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cycle</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Q1</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Q2</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Q3</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Q4</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -25,11 +50,11 @@ async function VoucherTable() {
               <td colSpan={7} className="px-6 py-4 text-center text-gray-500">No vouchers yet. Add your first card!</td>
             </tr>
           ) : (
-            data.map((voucher: Voucher) => (
+            data.map((voucher) => (
               <tr key={voucher.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{voucher.cardName || 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{voucher.voucherName}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{voucher.cardType ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{voucher.cycle_type}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input type="checkbox" checked={voucher.q1} readOnly className="h-4 w-4" />
                 </td>
@@ -64,9 +89,7 @@ export default function Home() {
         
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">All Vouchers</h2>
-          <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
-            <VoucherTable />
-          </Suspense>
+          <VoucherTable />
         </div>
       </div>
     </div>
