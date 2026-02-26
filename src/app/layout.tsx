@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '💳 Rupay Select Voucher Tracker',
-  description: 'Track your Rupay Select debit card benefits and vouchers',
+  title: 'RuPay Select Tracker',
+  description: 'Track your RuPay Select debit card benefits and vouchers',
 }
 
 export default function RootLayout({
