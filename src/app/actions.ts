@@ -1,7 +1,27 @@
-import type { Voucher } from '@/lib/schema'
-import { createServerClient } from '@/lib/supabase'
+import type { Voucher } from '../lib/schema'
+import { createServerClient as createServerClientImpl } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+
+function createServerClient() {
+  return createServerClientImpl(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookies().get(name)?.value
+        },
+        set(name: string, value: string, options: any) {
+          cookies().set({ name, value, ...options })
+        },
+        remove(name: string, options: any) {
+          cookies().set({ name, value: '', ...options })
+        },
+      },
+    }
+  )
+}
 
 export async function getVouchers() {
   const supabase = createServerClient()

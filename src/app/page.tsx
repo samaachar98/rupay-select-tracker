@@ -1,51 +1,74 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DataTable } from "@/components/data-table"
-import { columns } from "@/components/columns"
 import { getVouchers } from "./actions"
-import type { Voucher } from "@/lib/schema"
+import type { Voucher } from "../lib/schema"
 import { Suspense } from "react"
 
 async function VoucherTable() {
   const data = await getVouchers()
-  return <DataTable columns={columns} data={data} />
+  // For now, show a simple table - can enhance with DataTable later
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Card</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voucher</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cycle</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q1</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q2</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q3</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Q4</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan={7} className="px-6 py-4 text-center text-gray-500">No vouchers yet. Add your first card!</td>
+            </tr>
+          ) : (
+            data.map((voucher: Voucher) => (
+              <tr key={voucher.id}>
+                <td className="px-6 py-4 whitespace-nowrap">{voucher.cardName || 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{voucher.voucherName}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{voucher.cycle_type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input type="checkbox" checked={voucher.q1} readOnly className="h-4 w-4" />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input type="checkbox" checked={voucher.q2} readOnly className="h-4 w-4" />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input type="checkbox" checked={voucher.q3} readOnly className="h-4 w-4" />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input type="checkbox" checked={voucher.q4} readOnly className="h-4 w-4" />
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
 export default function Home() {
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">💳 Rupay Select Voucher Tracker</h1>
-      
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="all">All Cards</TabsTrigger>
-          <TabsTrigger value="quarterly">Quarterly</TabsTrigger>
-        </TabsList>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold mb-8 text-center">💳 Rupay Select Voucher Tracker</h1>
         
-        <TabsContent value="all">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Vouchers</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Suspense fallback={<div>Loading...</div>}>
-                <VoucherTable />
-              </Suspense>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <div className="mb-6 flex gap-2">
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">All Cards</button>
+          <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Quarterly</button>
+        </div>
         
-        <TabsContent value="quarterly">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quarterly Benefits</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Quarterly vouchers filtered here (TBD)</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">All Vouchers</h2>
+          <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+            <VoucherTable />
+          </Suspense>
+        </div>
+      </div>
     </div>
   )
 }
