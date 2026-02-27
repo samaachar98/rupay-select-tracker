@@ -5,6 +5,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Fix for CSS issues on Vercel
+  swcMinify: true,
+  // Ensure CSS is properly extracted
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 }
 
 module.exports = nextConfig
